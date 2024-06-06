@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Art Space</string>
+
+    <string name="woman_of_the_haslital_title">Woman of the Haslital, Returning from the Hay Harvest</string>
+    <string name="woman_of_the_haslital_artist_and_year">1876</string>
+
+    <string name="hornbills_title">Hornbills</string>
+    <string name="hornbills_artist_and_year">Thomas Waterman Wood (1871)</string>
+
+    <string name="bouquet_of_flowers_title">Bouquet of Flowers In A Stone Niche</string>
+    <string name="bouquet_of_flowers_artist_and_year">1618</string>
+</resources>
