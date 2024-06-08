@@ -10,15 +10,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -54,65 +61,84 @@ fun ArtSpace( modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        ArtworkDisplay(modifier)
+        val artworkState = remember { mutableIntStateOf(1) }
+        val artwork by artworkState
 
-        ArtworkSummary(modifier)
+        val image = when (artwork) {
+            1 -> R.drawable.hornbills
+            2 -> R.drawable.womanofthehaslital
+            else -> R.drawable.bouquetofflowers
+        }
+        val title = when (artwork) {
+            1 -> R.string.hornbills_title
+            2 -> R.string.woman_of_the_haslital_title
+            else -> R.string.bouquet_of_flowers_title
+        }
+        val year = when (artwork) {
+            1 -> R.string.hornbills_year
+            2 -> R.string.woman_of_the_haslital_year
+            else -> R.string.bouquet_of_flowers_year
+        }
+        val artist = when (artwork) {
+            1 -> R.string.hornbills_artist
+            2 -> R.string.woman_of_the_haslital_artist
+            else -> R.string.bouquet_of_flowers_artist
+        }
 
-        NavigationButtons(modifier)
+        ArtworkDisplay(image, Modifier.fillMaxHeight(0.5f))
+
+        ArtworkSummary(title, year, artist, Modifier.fillMaxHeight(1f))
+
+        NavigationButtons(artworkState, modifier.fillMaxHeight(1f))
     }
 }
 
 @Composable
-private fun ArtworkDisplay(modifier: Modifier) {
+private fun ArtworkDisplay(image: Int, modifier: Modifier) {
     Box(
         modifier = modifier
             .shadow(elevation = 3.dp)
     ) {
         Image(
-            painterResource(id = R.drawable.hornbills),
+            painter = painterResource(id = image),
             contentDescription = null,
-            modifier = modifier
+            modifier = Modifier
                 .padding(36.dp)
+                .height(500.dp)
         )
     }
 }
 
 @Composable
-private fun ArtworkSummary(modifier: Modifier) {
+private fun ArtworkSummary(title: Int, year: Int, artist: Int, modifier: Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .height(80.dp)
             .fillMaxWidth()
             .background(color = Color.LightGray)
     ) {
         Text(
-            stringResource(id = R.string.hornbills_title),
+            text = stringResource(id = title),
             fontSize = 24.sp,
             modifier = modifier
         )
-        Row(
-            horizontalArrangement = Arrangement.Center,
+        Text(
+            text = stringResource(id = year),
             modifier = modifier
-                .padding(top = 10.dp)
-        ) {
-            Text(
-                stringResource(id = R.string.hornbills_artist),
-                fontWeight = FontWeight.Bold,
-                modifier = modifier
-            )
-            Text(
-                stringResource(id = R.string.hornbills_year),
-                modifier = modifier
-            )
-        }
+        )
+        Text(
+            text = stringResource(id = artist),
+            fontWeight = FontWeight.Bold,
+            modifier = modifier
+        )
     }
 }
 
 @Composable
-private fun NavigationButtons(modifier: Modifier) {
+private fun NavigationButtons(artworkState: MutableState<Int>, modifier: Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
@@ -122,14 +148,26 @@ private fun NavigationButtons(modifier: Modifier) {
         Button(
             modifier = modifier
                 .width(140.dp),
-            onClick = { /*TODO*/ }
+            onClick = {
+                if (artworkState.value > 1) {
+                    artworkState.value--
+                } else {
+                    artworkState.value = 3
+                }
+            }
         ) {
             Text(text = "Previous")
         }
         Button(
             modifier = modifier
                 .width(140.dp),
-            onClick = { /*TODO*/ }
+            onClick = {
+                if (artworkState.value < 3) {
+                    artworkState.value++
+                } else {
+                    artworkState.value = 1
+                }
+            }
         ) {
             Text(text = "Next")
         }
